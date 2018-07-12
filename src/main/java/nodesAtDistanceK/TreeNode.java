@@ -21,4 +21,8 @@ public class TreeNode {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return this.data+"";
+    }
 }

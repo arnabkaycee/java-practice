@@ -8,31 +8,39 @@ public class NodesAtKDistanceK {
     private boolean nodeFound = false;
 
     private Set<Integer> nodes = new HashSet<>();
+    private Set<Integer> visited = new HashSet<>();
 
-    private int lookUp;
+    private boolean lookUpStarted;
 
-    private void getNodesAtDistanceK(TreeNode rootNode, int referenceNode, int k) {
-
+    private int getNodesAtDistanceK(TreeNode rootNode, int referenceNode, int k) {
         if (!nodeFound) {
             if (rootNode == null) {
-                return;
+                return k;
             } else if (rootNode.data == referenceNode) {
                 nodeFound = true;
             } else {
-                getNodesAtDistanceK(rootNode.left, referenceNode, k);
-                if (!nodeFound) getNodesAtDistanceK(rootNode.right, referenceNode, k);
+                k = getNodesAtDistanceK(rootNode.left, referenceNode, k);
+                if (!nodeFound) k = getNodesAtDistanceK(rootNode.right, referenceNode, k);
             }
         }
-        if (nodeFound && k > 0 && rootNode != null) {
-            //look down
-            getNodesAtDistanceK(rootNode.left, referenceNode, k - 1);
-            getNodesAtDistanceK(rootNode.right, referenceNode, k - 1);
-            //look up
-
+        if (nodeFound) {
+            if (rootNode != null) {
+                if (k > 0 && !visited.contains(rootNode.data)) {
+                    visited.add(rootNode.data);
+                    //look down
+                    k = getNodesAtDistanceK(rootNode.left, referenceNode, k - 1);
+                    k = getNodesAtDistanceK(rootNode.right, referenceNode, k - 1);
+                }
+                if (k == 0 && !nodes.contains(rootNode.data)) {
+                    nodes.add(rootNode.data);
+                }
+                if (rootNode.data == referenceNode){
+                    return k-1;
+                }
+            }
+            return k + 1;
         }
-        if (nodeFound && k==0 && rootNode != null && !nodes.contains(rootNode.data)){
-            nodes.add(rootNode.data);
-        }
+        return k;
     }
 
 
