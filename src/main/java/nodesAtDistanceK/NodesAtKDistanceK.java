@@ -10,7 +10,6 @@ public class NodesAtKDistanceK {
     private Set<Integer> nodes = new HashSet<>();
     private Set<Integer> visited = new HashSet<>();
 
-    private boolean lookUpStarted;
 
     private int getNodesAtDistanceK(TreeNode rootNode, int referenceNode, int k) {
         if (!nodeFound) {
@@ -20,27 +19,32 @@ public class NodesAtKDistanceK {
                 nodeFound = true;
             } else {
                 k = getNodesAtDistanceK(rootNode.left, referenceNode, k);
-                if (!nodeFound) k = getNodesAtDistanceK(rootNode.right, referenceNode, k);
+                if (!nodeFound) {
+                    k = getNodesAtDistanceK(rootNode.right, referenceNode, k);
+                }
             }
         }
-        if (nodeFound) {
-            if (rootNode != null) {
-                if (k > 0 && !visited.contains(rootNode.data)) {
-                    visited.add(rootNode.data);
-                    //look down
-                    k = getNodesAtDistanceK(rootNode.left, referenceNode, k - 1);
-                    k = getNodesAtDistanceK(rootNode.right, referenceNode, k - 1);
-                }
-                if (k == 0 && !nodes.contains(rootNode.data)) {
-                    nodes.add(rootNode.data);
-                }
-                if (rootNode.data == referenceNode){
-                    return k-1;
-                }
-            }
-            return k + 1;
+        if (nodeFound && !visited.contains(rootNode.data)) {
+            addNodesAtDistanceKFromRoot(rootNode, k);
+            return k - 1;
         }
         return k;
+    }
+
+    private void addNodesAtDistanceKFromRoot(TreeNode rootNode, int k) {
+        if (rootNode != null) {
+            if (k > 0 && !visited.contains(rootNode.data)) {
+                visited.add(rootNode.data);
+                //look down
+                addNodesAtDistanceKFromRoot(rootNode.left, k - 1);
+                addNodesAtDistanceKFromRoot(rootNode.right, k - 1);
+                visited.add(rootNode.data);
+            }
+            if (k == 0 && !nodes.contains(rootNode.data) && !visited.contains(rootNode.data)) {
+                visited.add(rootNode.data);
+                nodes.add(rootNode.data);
+            }
+        }
     }
 
 
