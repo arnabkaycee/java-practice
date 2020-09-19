@@ -1,8 +1,8 @@
 package FillInTheBoxes;
 
-import sun.reflect.generics.tree.Tree;
-
-import java.util.*;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
 
 public class FillInTheBoxes {
 
